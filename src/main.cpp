@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <string>
 #include <fstream>
+// #include <unistd.h>
 
 std::string get_path(std::string command)
 {
@@ -68,7 +69,7 @@ int main()
     }
     else if (input == "pwd")
     {
-      // std::cout << std::filesystem::current_path() << '\n';
+
       std::filesystem::path currentPath = std::filesystem::current_path();
       std::string currentPathString = currentPath.string();
       std::cout <<currentPathString << std::endl;
@@ -77,7 +78,7 @@ int main()
       //other method
       // char temp [ PATH_MAX ];
       // if ( getcwd(temp, PATH_MAX) != 0) 
-      //   return std::string ( temp );
+      //   std::cout<< std::string ( temp )<<std::endl;
 
     }
     else if (firstWord == "echo")
@@ -88,6 +89,16 @@ int main()
     else if (firstWord == "type")
     {
       handleType(input);
+    }
+    else if(firstWord == "cd"){
+      input.erase(0, input.find(" ") + 1);
+      std::filesystem::path path(input);
+      if(std::filesystem::exists(path)){
+        std::filesystem::current_path(path);
+      }
+      else{
+        std::cout<<"cd: "<<input<<": No such file or directory"<<std::endl;
+      }
     }
     else
     {
