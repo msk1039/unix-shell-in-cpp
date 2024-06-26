@@ -25,7 +25,7 @@ void handleType(std::string input)
 {
 
   input.erase(0, input.find(" ") + 1);
-  if (input == "echo" || input == "type" || input == "exit")
+  if (input == "echo" || input == "type" || input == "exit" || input == "pwd")
   {
     std::cout << input << " is a shell builtin\n";
   }
@@ -63,7 +63,23 @@ int main()
     std::string firstWord = input.substr(0, input.find(" "));
 
     if (input == "exit 0")
+    {
       return 0;
+    }
+    else if (input == "pwd")
+    {
+      // std::cout << std::filesystem::current_path() << '\n';
+      std::filesystem::path currentPath = std::filesystem::current_path();
+      std::string currentPathString = currentPath.string();
+      std::cout <<currentPathString << std::endl;
+
+
+      //other method
+      // char temp [ PATH_MAX ];
+      // if ( getcwd(temp, PATH_MAX) != 0) 
+      //   return std::string ( temp );
+
+    }
     else if (firstWord == "echo")
     {
       std::string echo = input.substr(5);
@@ -75,7 +91,6 @@ int main()
     }
     else
     {
-      // std::cout << input << ": command not found" << std::endl;
 
       std::string filepath = get_path(firstWord);
       if (filepath.empty())
@@ -86,11 +101,13 @@ int main()
       {
         input.erase(0, input.find(" "));
         std::ifstream file(filepath);
-        if(file.good()){
-          std::string command = "exec " + filepath + input ;
+        if (file.good())
+        {
+          std::string command = "exec " + filepath + input;
           std::system(command.c_str());
         }
-        else{
+        else
+        {
           std::cout << input << ": not found\n";
         }
       }
