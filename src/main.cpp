@@ -72,14 +72,12 @@ int main()
 
       std::filesystem::path currentPath = std::filesystem::current_path();
       std::string currentPathString = currentPath.string();
-      std::cout <<currentPathString << std::endl;
+      std::cout << currentPathString << std::endl;
 
-
-      //other method
-      // char temp [ PATH_MAX ];
-      // if ( getcwd(temp, PATH_MAX) != 0) 
-      //   std::cout<< std::string ( temp )<<std::endl;
-
+      // other method
+      //  char temp [ PATH_MAX ];
+      //  if ( getcwd(temp, PATH_MAX) != 0)
+      //    std::cout<< std::string ( temp )<<std::endl;
     }
     else if (firstWord == "echo")
     {
@@ -90,14 +88,43 @@ int main()
     {
       handleType(input);
     }
-    else if(firstWord == "cd"){
+    else if (firstWord == "cd")
+    {
       input.erase(0, input.find(" ") + 1);
-      std::filesystem::path path(input);
-      if(std::filesystem::exists(path)){
-        std::filesystem::current_path(path);
+
+      if (input == "~")
+      {
+        try
+        {
+          // Get the user's home directory
+          std::filesystem::path homePath;
+
+// #ifdef _WIN32
+//           homePath = std::filesystem::path(std::getenv("HOMEDRIVE")) / std::getenv("HOMEPATH");
+// #else
+          homePath = std::filesystem::path(std::getenv("HOME"));
+// #endif
+
+          // Change the current working directory to the user's home directory
+          std::filesystem::current_path(homePath);
+
+        }
+        catch (const std::filesystem::filesystem_error &e)
+        {
+          std::cout << "cd: " << input << ": No such file or directory" << std::endl;
+        }
       }
-      else{
-        std::cout<<"cd: "<<input<<": No such file or directory"<<std::endl;
+      else
+      {
+        std::filesystem::path path(input);
+        if (std::filesystem::exists(path))
+        {
+          std::filesystem::current_path(path);
+        }
+        else
+        {
+          std::cout << "cd: " << input << ": No such file or directory" << std::endl;
+        }
       }
     }
     else
