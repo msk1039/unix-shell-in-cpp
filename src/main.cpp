@@ -1,5 +1,18 @@
 #include <iostream>
 
+void handleType(std::string input){
+  std::string type = input.substr(5);
+  
+  if(type == "echo" || type == "type" || type == "exit"){
+    std::cout << type << " is a shell builtin" << std::endl;
+  }
+  else{
+    std::cout << type<< ": not found" << std::endl;
+  }
+  
+  
+}
+
 int main()
 {
   
@@ -23,6 +36,10 @@ int main()
     else if(firstWord == "echo"){
       std::string echo = input.substr(5);
       std::cout << echo << std::endl;
+    }
+    else if(firstWord == "type"){
+      handleType(input);
+
     }
     else{
     std::cout << input << ": command not found" << std::endl;
