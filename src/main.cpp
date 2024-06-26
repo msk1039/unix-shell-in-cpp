@@ -2,6 +2,7 @@
 #include <sstream>
 #include <filesystem>
 #include <string>
+#include <fstream>
 
 std::string get_path(std::string command)
 {
@@ -74,7 +75,25 @@ int main()
     }
     else
     {
-      std::cout << input << ": command not found" << std::endl;
+      // std::cout << input << ": command not found" << std::endl;
+
+      std::string filepath = get_path(firstWord);
+      if (filepath.empty())
+      {
+        std::cout << input << ": not found\n";
+      }
+      else
+      {
+        input.erase(0, input.find(" "));
+        std::ifstream file(filepath);
+        if(file.good()){
+          std::string command = "exec " + filepath + input ;
+          std::system(command.c_str());
+        }
+        else{
+          std::cout << input << ": not found\n";
+        }
+      }
     }
   }
 }
