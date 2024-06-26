@@ -26,7 +26,7 @@ void handleType(std::string input)
 {
 
   input.erase(0, input.find(" ") + 1);
-  if (input == "echo" || input == "type" || input == "exit" || input == "pwd")
+  if (input == "echo" || input == "type" || input == "exit" || input == "pwd" || input == "cd")
   {
     std::cout << input << " is a shell builtin\n";
   }
