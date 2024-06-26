@@ -1,21 +1,51 @@
 #include <iostream>
+#include <sstream>
+#include <filesystem>
+#include <string>
 
-void handleType(std::string input){
-  std::string type = input.substr(5);
-  
-  if(type == "echo" || type == "type" || type == "exit"){
-    std::cout << type << " is a shell builtin" << std::endl;
+std::string get_path(std::string command)
+{
+  std::string path_env = std::getenv("PATH");
+  std::stringstream ss(path_env);
+  std::string path;
+  while (!ss.eof())
+  {
+    getline(ss, path, ':');
+    std::string abs_path = path + '/' + command;
+    if (std::filesystem::exists(abs_path))
+    {
+      return abs_path;
+    }
   }
-  else{
-    std::cout << type<< ": not found" << std::endl;
+  return "";
+}
+
+void handleType(std::string input)
+{
+
+  input.erase(0, input.find(" ") + 1);
+  if (input == "echo" || input == "type" || input == "exit")
+  {
+    std::cout << input << " is a shell builtin\n";
   }
-  
-  
+  else
+  {
+
+    std::string path = get_path(input);
+    if (path.empty())
+    {
+      std::cout << input << ": not found\n";
+    }
+    else
+    {
+      std::cout << input << " is " << path << std::endl;
+    }
+  }
 }
 
 int main()
 {
-  
+
   // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
@@ -33,18 +63,18 @@ int main()
 
     if (input == "exit 0")
       return 0;
-    else if(firstWord == "echo"){
+    else if (firstWord == "echo")
+    {
       std::string echo = input.substr(5);
       std::cout << echo << std::endl;
     }
-    else if(firstWord == "type"){
+    else if (firstWord == "type")
+    {
       handleType(input);
-
     }
-    else{
-    std::cout << input << ": command not found" << std::endl;
-
+    else
+    {
+      std::cout << input << ": command not found" << std::endl;
     }
-  
   }
 }
