@@ -1,4 +1,4 @@
-# unix-shell-in-c-
+# unix-shell-in-cpp
 
 1. Ensure you have `cmake` installed locally
 
