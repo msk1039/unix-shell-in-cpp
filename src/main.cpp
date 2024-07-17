@@ -5,6 +5,12 @@
 #include <fstream>
 // #include <unistd.h>
 
+const std::string RESET = "\033[0m";
+const std::string RED = "\033[31m";
+const std::string GREEN = "\033[32m";
+const std::string YELLOW = "\033[33m";
+const std::string BLUE = "\033[34m";
+
 std::string get_path(std::string command)
 {
   std::string path_env = std::getenv("PATH");
@@ -28,7 +34,7 @@ void handleType(std::string input)
   input.erase(0, input.find(" ") + 1);
   if (input == "echo" || input == "type" || input == "exit" || input == "pwd" || input == "cd")
   {
-    std::cout << input << " is a shell builtin\n";
+    std::cout << GREEN << input << RESET << " is a shell builtin\n";
   }
   else
   {
@@ -36,7 +42,7 @@ void handleType(std::string input)
     std::string path = get_path(input);
     if (path.empty())
     {
-      std::cout << input << ": not found\n";
+      std::cout << RED << input << RESET << ": not found\n";
     }
     else
     {
@@ -54,7 +60,7 @@ int main()
 
   while (true)
   {
-    std::cout << "$ ";
+    std::cout << GREEN << "$ " << RESET;
     std::string input;
     std::getline(std::cin, input);
 
@@ -82,6 +88,7 @@ int main()
     else if (firstWord == "echo")
     {
       std::string echo = input.substr(5);
+
       std::cout << echo << std::endl;
     }
     else if (firstWord == "type")
@@ -99,15 +106,14 @@ int main()
           // Get the user's home directory
           std::filesystem::path homePath;
 
-// #ifdef _WIN32
-//           homePath = std::filesystem::path(std::getenv("HOMEDRIVE")) / std::getenv("HOMEPATH");
-// #else
+          #ifdef _WIN32
+                    homePath = std::filesystem::path(std::getenv("HOMEDRIVE")) / std::getenv("HOMEPATH");
+          #else
           homePath = std::filesystem::path(std::getenv("HOME"));
-// #endif
+          #endif
 
           // Change the current working directory to the user's home directory
           std::filesystem::current_path(homePath);
-
         }
         catch (const std::filesystem::filesystem_error &e)
         {
