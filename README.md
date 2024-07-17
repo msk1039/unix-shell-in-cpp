@@ -1,3 +1,5 @@
+# unix-shell-in-c-
+
 1. Ensure you have `cmake` installed locally
 
 2. Run `./your_shell.sh` to run your program, which is implemented in
